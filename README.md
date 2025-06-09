@@ -108,6 +108,3 @@ Stops a spinner with an error message.
 spinner.StopWithError(index, fmt.Errorf("Task failed: %v", err))
 ```
 
-## License
-
-MIT

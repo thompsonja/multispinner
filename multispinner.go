@@ -62,6 +62,10 @@ func Create(config Config) *Spinner {
 		config.FailureColor = DefaultConfig().FailureColor
 	}
 
+	// Reset terminal state
+	fmt.Print("\033[?25h") // Show cursor
+	fmt.Print("\033[0m")   // Reset all attributes
+
 	// Save current cursor position
 	fmt.Print("\033[s")
 
@@ -91,6 +95,9 @@ func (s *Spinner) run() {
 	for {
 		select {
 		case <-s.stopChan:
+			// Clean up terminal state before exiting
+			fmt.Print("\033[?25h") // Show cursor
+			fmt.Print("\033[0m")   // Reset all attributes
 			return
 		case msg := <-s.updateChan:
 			s.mu.Lock()
@@ -104,6 +111,7 @@ func (s *Spinner) run() {
 				s.activeCount--
 				if s.activeCount == 0 {
 					fmt.Print("\033[?25h") // Show cursor
+					fmt.Print("\033[0m")   // Reset all attributes
 				}
 			}
 			s.mu.Unlock()
